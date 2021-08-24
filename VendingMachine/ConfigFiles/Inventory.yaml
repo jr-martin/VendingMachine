@@ -1,0 +1,24 @@
+---
+# Define inventory items in this file.
+# Items are indented a single space and are separated by an unindented "-". Items must have Name, Price, and Amount properties.
+# Note that the Price property must have quotes.
+-
+ Name: CandyBar
+ Price: "1.50"
+ Amount: 5
+-
+ Name: Chips
+ Price: "75"
+ Amount: 10
+-
+ Name: GummyWorms
+ Price: "1.25"
+ Amount: 3
+-
+ Name: Pretzels
+ Price: ".50"
+ Amount: 8
+-
+ Name: Gum
+ Price: ".25"
+ Amount: 10

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using VendingMachine.Models;
 
 namespace VendingMachine.Contracts
@@ -12,8 +8,15 @@ namespace VendingMachine.Contracts
   /// </summary>
   public interface IVendingManager
   {
-    string VendItem();
-    Dictionary<int, int> ReturnChange();
-    public List<InventoryItem> GetAvailableItems();
+    /// <summary>
+    /// Returns the current inventory.
+    /// </summary>
+    List<InventoryItem> GetAvailableItems();
+
+    /// <summary>
+    /// Returns a hash set which represents the coin types that the machine accepts.
+    /// </summary>
+    HashSet<int> GetAcceptedDenominations();
+
   }
 }

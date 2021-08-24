@@ -8,7 +8,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using VendingMachine.Models;
 
-namespace VendingMachine
+namespace VendingMachine.Services
 {
   /// <summary>
   /// Performs stocking functions. This implementation gets values from yaml files.
@@ -34,9 +34,13 @@ namespace VendingMachine
           return null;
         }
 
-        //deserialize moneyYaml string into a sorted list
+        // deserialize moneyYaml string into a dictionary, then create a sorted list and add all values to it
+        // unfortunately, we can't deserialize directly into a sorted list
         var deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance) .Build();
-        SortedList<int, int> funds = deserializer.Deserialize<SortedList<int, int>>(moneyYaml);
+
+        Dictionary<int, int> fundsDict = deserializer.Deserialize<Dictionary<int, int>>(moneyYaml);
+
+        SortedList<int, int> funds = new SortedList<int, int>(fundsDict, new ReverseComparer<int>(Comparer<int>.Default));
 
         return funds;
 

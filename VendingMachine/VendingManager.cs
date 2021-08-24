@@ -27,14 +27,17 @@ namespace VendingMachine
       return _inventoryItems;
     }
 
-    public string VendItem()
+    public HashSet<int> GetAcceptedDenominations()
     {
-      throw new NotImplementedException();
+      return new HashSet<int>(_funds.Keys);
     }
 
-    public Dictionary<int, int> ReturnChange()
+    public MachineOutput VendItem(UserInput userInput)
     {
-      throw new NotImplementedException();
+
     }
+
+    //private MakeChange(SortedList<int, int> funds, SortedList<int, int> )
+
   }
 }

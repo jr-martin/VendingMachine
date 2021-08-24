@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Contracts;
 
-namespace VendingMachine
+namespace VendingMachine.Services
 {
   /// <summary>
   /// Logs output. This implementation writes to the console.

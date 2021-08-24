@@ -2,7 +2,7 @@
 using System.IO;
 using VendingMachine.Contracts;
 
-namespace VendingMachine
+namespace VendingMachine.Services
 {
   /// <summary>
   /// Handles File IO operations. Reads money and inventory files and returns the contents as strings.

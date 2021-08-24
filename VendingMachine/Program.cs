@@ -14,13 +14,11 @@ namespace VendingMachine
         // To do for future release: implement a DI container
         #region Setup
 
-        var logService = new LogService();
-
         // Instantiate a File Service to read config files
-        var fileService = new FileService(logService);
+        var fileService = new FileService();
 
         // Instantiate a Stocking Service to get the Inventory and Funds
-        var stockingService = new StockingService(fileService, logService);
+        var stockingService = new StockingService(fileService);
 
         #endregion
 
@@ -30,22 +28,53 @@ namespace VendingMachine
         ValidateStock(inventory, funds);
 
         // Instantiate a Vending Manager, which manages the funds and inventory
-        var vendingManager = new VendingManager(inventory, funds, logService);
+        var vendingManager = new VendingManager(inventory, funds);
 
-        List<InventoryItem> items = vendingManager.GetAvailableItems();
         HashSet<int> acceptedDenominations = vendingManager.GetAcceptedDenominations();
 
-        UserInput input = GetUserInput(items, acceptedDenominations);
-        if (input == null)
+        bool runMachine = true;
+        while (runMachine)
         {
-          Console.WriteLine("Exiting Vending Machine.");
-          return;
+          List<InventoryItem> items = vendingManager.GetAvailableItems();
+          UserInput input = GetUserInput(items, acceptedDenominations);
+          if (input == null)
+          {
+            runMachine = false;
+            continue;
+          }
+
+          var output = vendingManager.VendItem(input);
+          if (output == null)
+          {
+            Console.WriteLine("Sorry, we couldn't make change for that item. Please try another selection.");
+            Console.Write("Your change: ");
+            foreach(var coin in input.Coins)
+            {
+              Console.Write(coin);
+            }
+            Console.WriteLine();
+          }
+          else
+          {
+            Console.WriteLine($"Your item: {output.Item}");
+            Console.Write("Your change: ");
+            PrintSortedIntList(output.Change);
+            Console.WriteLine();
+          }
+
+          Console.WriteLine("Enter Y to make another selection. Enter any other character to exit.");
+          var selection = Console.ReadLine().Trim();
+          if (selection.Equals("y") || selection.Equals("Y"))
+          {
+            runMachine = true;
+          }
+          else
+          {
+            runMachine = false;
+          }
         }
+        Console.WriteLine("Exiting Vending Machine.");
 
-
-
-        Console.ReadKey();
-        return;
       }
       catch (Exception ex)
       {
@@ -85,7 +114,7 @@ namespace VendingMachine
       {
         Console.Write($"Item Code: {i}");
         Console.Write($" | Name: {items[i].Name}".PadRight(20));
-        Console.Write($" | Price: ${items[i].PriceDec}".PadRight(4));
+        Console.Write($" | Price: ${items[i].PriceDec:0.00}".PadRight(4));
         Console.Write($" | Quantity: {items[i].Amount}");
         Console.WriteLine();
       }
@@ -102,7 +131,7 @@ namespace VendingMachine
       {
         DisplayItems(items);
 
-        Console.WriteLine("Please make a selection by entering an Item Code. Enter X to exit.");
+        Console.WriteLine("Please make a selection by entering an Item Code. (Enter X to exit.)");
         var selection = Console.ReadLine().Trim();
         if (selection.Equals("x") || selection.Equals("X"))
         {
@@ -129,7 +158,7 @@ namespace VendingMachine
         }
 
         Console.WriteLine("Please insert your coins.");
-        Console.WriteLine($"Enter ${selectedItem.PriceDec} as a list of coin values separated by spaces");
+        Console.WriteLine($"Enter ${selectedItem.PriceDec:0.00} as a list of coin values separated by spaces");
 
         var coinsInput = Console.ReadLine().Trim();
 
@@ -143,23 +172,23 @@ namespace VendingMachine
           continue;
         }
 
-        (decimal totalInDollars, int totalInCents) coinTotals = GetCoinTotals(coins, selectedItem.PriceDec);
-        if (coinTotals.totalInDollars < selectedItem.PriceDec)
+        var totals = GetTotals(coins, selectedItem.PriceDec);
+        if (totals.totalInDollars < selectedItem.PriceDec)
         {
 
           Console.WriteLine();
-          Console.WriteLine($"Insufficient amount inserted: ${coinTotals.totalInDollars:0.00}. Please try again.");
+          Console.WriteLine($"Insufficient amount inserted: ${totals.totalInDollars:0.00}. Please try again.");
           Console.WriteLine($"Your change: {coinsInput}");
 
           continue;
         }
 
-        Console.WriteLine($"${coinTotals.totalInDollars} inserted");
+        Console.WriteLine($"${totals.totalInDollars:0.00} inserted");
 
+        input.SelectedItemCode = itemCode;
+        input.SelectedItemPrice = selectedItem.PriceDec;
         input.Coins = coins;
-        input.ItemCode = itemCode;
-        input.TotalInDollars = coinTotals.totalInDollars;
-        input.TotalInCents = coinTotals.totalInCents;
+        input.CoinTotalInCents = totals.totalInCents;
 
         validUserInput = true;
       }
@@ -192,18 +221,29 @@ namespace VendingMachine
       return coins;
     }
 
-    private static (decimal totalInDollars, int totalInCents) GetCoinTotals(List<int> coins, decimal price)
+    private static (decimal totalInDollars, int totalInCents) GetTotals(List<int> coins, decimal price)
     {
       int totalInCents = 0;
-      foreach(var coin in coins)
+      foreach (var coin in coins)
       {
         totalInCents += coin;
       }
-      decimal sumDecimal = totalInCents;
+      decimal totalDecimal = totalInCents;
 
-      decimal totalInDollars = sumDecimal / 100M;
+      decimal totalInDollars = totalDecimal / 100M;
 
       return (totalInDollars, totalInCents);
+    }
+
+    private static void PrintSortedIntList(SortedList<int, int> sortedList)
+    {
+      foreach (var kvp in sortedList)
+      {
+        for (int i = 0; i < kvp.Value; i++)
+        {
+          Console.Write(kvp.Key + " ");
+        }
+      }
     }
   }
 }

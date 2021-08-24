@@ -13,12 +13,6 @@ namespace VendingMachine.Services
     private const string _inventoryFile = "Inventory.yaml";
     private const string _moneyFile = "Money.yaml";
 
-    private ILogService _logService;
-    public FileService(ILogService logService)
-    {
-      _logService = logService;
-    }
-
     public string GetInventoryFile()
     {
       return GetFileContentsAsString(_inventoryFile);
@@ -36,7 +30,7 @@ namespace VendingMachine.Services
 
       if (!File.Exists(fullPath))
       {
-        _logService.LogError($"{fileName} does not exist. Please place it in the same directory as the executable.");
+        Console.WriteLine($"{fileName} does not exist. Please place it in the same directory as the executable.");
         return null;
       }
 

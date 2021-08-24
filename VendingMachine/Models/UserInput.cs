@@ -4,9 +4,9 @@ namespace VendingMachine.Models
 {
   public class UserInput
   {
-    public int ItemCode { get; set; }
+    public int SelectedItemCode { get; set; }
+    public decimal SelectedItemPrice { get; set; }
     public List<int> Coins { get; set; }
-    public decimal TotalInDollars { get; set; }
-    public int TotalInCents { get; set; }
+    public int CoinTotalInCents { get; set; }
   }
 }

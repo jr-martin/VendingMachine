@@ -15,13 +15,11 @@ namespace VendingMachine.Services
   /// </summary>
   public class StockingService : IStockingService
   {
-    ILogService _logService;
     IFileService _fileService;
 
-    public StockingService(IFileService fileService, ILogService logService)
+    public StockingService(IFileService fileService)
     {
       _fileService = fileService;
-      _logService = logService;
     }
 
     public SortedList<int, int> LoadFunds()
@@ -34,8 +32,7 @@ namespace VendingMachine.Services
           return null;
         }
 
-        // deserialize moneyYaml string into a dictionary, then create a sorted list and add all values to it
-        // unfortunately, we can't deserialize directly into a sorted list
+        // deserialize moneyYaml string into a dictionary, then create a sorted list from the dictionary
         var deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance) .Build();
 
         Dictionary<int, int> fundsDict = deserializer.Deserialize<Dictionary<int, int>>(moneyYaml);
@@ -48,8 +45,7 @@ namespace VendingMachine.Services
       // catch exception, log necessary data, and rethrow it for handling further up the stack
       catch (Exception ex)
       {
-        var exceptionName = ex.GetType().Name;
-        _logService.LogError(exceptionName, ex.Message);
+        Console.Write("An error occurred while attempting to load the funds");
         throw;
       }
     }
@@ -72,7 +68,7 @@ namespace VendingMachine.Services
       catch (Exception ex)
       {
         var exceptionName = ex.GetType().Name;
-        _logService.LogError(exceptionName, ex.Message);
+        Console.Write("An error occurred while attempting to load the inventory.");
         throw;
       }
     }

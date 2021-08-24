@@ -9,6 +9,6 @@ namespace VendingMachine.Models
   public class MachineOutput
   {
     public String Item { get; set; }
-    public List<int> Change { get; set; }
+    public SortedList<int, int> Change { get; set; }
   }
 }

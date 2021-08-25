@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VendingMachine.Contracts;
 using VendingMachine.Models;
 
@@ -24,6 +22,7 @@ namespace VendingMachine
       return _inventoryItems;
     }
 
+    // we only accept types of coins that have already been loaded into the machine
     public HashSet<int> GetAcceptedDenominations()
     {
       return new HashSet<int>(_funds.Keys);
@@ -49,7 +48,7 @@ namespace VendingMachine
         tempFunds[coin]++;
       }
 
-      // in this case, no change needed
+      // in this case, no change is needed
       if (itemPriceInCents == input.CoinTotalInCents)
       {
         change.Add(0, 0); 
@@ -94,16 +93,19 @@ namespace VendingMachine
     // recursive function to do calculations
     private void CalculateChange(int changeAmount, SortedList<int, int> funds, SortedList<int, int> change, ref int index)
     {
+      // stop this loop if we reached the end of the items in funds or if we manually set the index
       while (index < funds.Count && index != -1)
       {
         var denomination = funds.ElementAt(index++).Key;
 
-        // returned coins must be smaller than the change amount
+        // returned coins must be smaller than the change amount, so skip to the next iteration
         if (changeAmount < denomination)
         {
           continue;
         }
 
+        // coins of this denomination needed compared to the amount available
+        // using Min to get the smaller number (either only getting the amount available or getting the rest of the coins available) 
         int count = Math.Min(changeAmount / denomination, funds[denomination]);
 
         change.Add(denomination, count);
@@ -113,7 +115,7 @@ namespace VendingMachine
 
         if (remainder == 0)
         {
-          // setting the index to -1 so we can check it in the calling method
+          // setting the index to -1 (arbitrary) so we can check it in the calling method
           index = -1;
           return;
         }
@@ -129,7 +131,6 @@ namespace VendingMachine
 
     private void UpdateFunds(SortedList<int, int> newFunds)
     {
-      // update the values in the _funds object to the new coin number
       foreach(var coin in newFunds)
       {
         _funds[coin.Key] = coin.Value;

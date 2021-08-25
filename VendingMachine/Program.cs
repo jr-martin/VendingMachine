@@ -32,6 +32,7 @@ namespace VendingMachine
 
         HashSet<int> acceptedDenominations = vendingManager.GetAcceptedDenominations();
 
+        // loop this code to prevent closing the console app
         bool runMachine = true;
         while (runMachine)
         {
@@ -158,7 +159,7 @@ namespace VendingMachine
         }
 
         Console.WriteLine("Please insert your coins.");
-        Console.WriteLine($"Enter ${selectedItem.PriceDec:0.00} as a list of coin values separated by spaces");
+        Console.WriteLine($"Enter ${selectedItem.PriceDec:0.00} as a list of coin values separated by spaces.");
 
         var coinsInput = Console.ReadLine().Trim();
 

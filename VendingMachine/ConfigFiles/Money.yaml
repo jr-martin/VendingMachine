@@ -1,7 +1,7 @@
 ---
 # Define the type and amount of coins loaded into the machine in this file.
-# The first value is the monetary value of the coin (i.e. 5 for a nickel). The second value is the quantity.
-1: 10
-5: 5
-10: 5
-25: 4
+# The first value is the monetary value of the coin in cents (i.e. 5 for a nickel). The second value is the quantity.
+1: 100
+5: 50
+10: 50
+25: 50

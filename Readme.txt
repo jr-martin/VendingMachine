@@ -7,7 +7,7 @@ price, amount, and item code. To use, simply run the executable or debug the pro
 How To Use
 ----------------------------------------------------------------------------------------------------------------------
 The vending machine funds and inventory are configured through two yaml files: Inventory.yaml and Money.yaml. Both are located
-in the ConfigFiles folder, which is located at the root directory of the solution. The application will automatically use the
+in the ConfigFiles folder, which is located at /VendingMachine/ConfigFiles. The application will automatically use the
 values in these two files for its inventory and funds, and both have been configured with default values.
 
 Please see the comments on the files themselves for more information on how they are structured.
@@ -20,3 +20,4 @@ Assumptions and Limitations
 - The machine will not accept coin denominations that it was not initially stocked with, even if they are valid currency.
 - This machine can be stocked with coins that don't exist (e.g. a 15 cent coin).
 - Inventory and Funds cannot be restocked while the machine is running.
+- If this application is published, the Money.yaml and Inventory.yaml files will be published to the same directory as the executable. These files must be kept in the same directory as the executable for the application to work.

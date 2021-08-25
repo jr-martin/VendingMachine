@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using VendingMachine.Models;
 using VendingMachine.Services;
+using VendingMachine.Contracts;
 
 namespace VendingMachine
 {
@@ -15,10 +16,10 @@ namespace VendingMachine
         #region Setup
 
         // Instantiate a File Service to read config files
-        var fileService = new FileService();
+        IFileService fileService = new FileService();
 
         // Instantiate a Stocking Service to get the Inventory and Funds
-        var stockingService = new StockingService(fileService);
+        IStockingService stockingService = new StockingService(fileService);
 
         #endregion
 
@@ -28,7 +29,7 @@ namespace VendingMachine
         ValidateStock(inventory, funds);
 
         // Instantiate a Vending Manager, which manages the funds and inventory
-        var vendingManager = new VendingManager(inventory, funds);
+        IVendingManager vendingManager = new VendingManager(inventory, funds);
 
         HashSet<int> acceptedDenominations = vendingManager.GetAcceptedDenominations();
 

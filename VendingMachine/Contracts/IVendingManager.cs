@@ -18,5 +18,7 @@ namespace VendingMachine.Contracts
     /// </summary>
     HashSet<int> GetAcceptedDenominations();
 
+    MachineOutput VendItem(UserInput input);
+
   }
 }

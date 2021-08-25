@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 namespace VendingMachine
 {
   /// <summary>
-  /// Generic Comparer 
+  /// Generic Reverse Comparer 
   /// </summary>
   public sealed class ReverseComparer<T> : IComparer<T>
   {
-    private readonly IComparer<T> _original;
+    private readonly IComparer<T> _comparer;
 
-    public ReverseComparer(IComparer<T> original)
+    public ReverseComparer(IComparer<T> comparer)
     {
-      _original = original;
+      _comparer = comparer;
     }
 
     public int Compare(T left, T right)
     {
-      return _original.Compare(right, left);
+      return _comparer.Compare(right, left);
     }
   }
 }
